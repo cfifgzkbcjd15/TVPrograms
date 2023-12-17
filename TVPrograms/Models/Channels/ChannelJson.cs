@@ -32,19 +32,16 @@ namespace TVPrograms.Models.Chats
     public class Current
     {
         [JsonProperty("channel_id")]
-        public string ChannelId { get; set; }
+        public int ChannelId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("category_id")]
-        public int CategoryId { get; set; }
+        public short CategoryId { get; set; }
 
         [JsonProperty("episode_title")]
         public string Title { get; set; }
-
-        [JsonProperty("id")]
-        public string Id { get; set; }
 
         [JsonProperty("start")]
         public string Start { get; set; }
@@ -56,7 +53,7 @@ namespace TVPrograms.Models.Chats
         public string Value { get; set; }
     }
 
-    public class Event
+    public class EventJson
     {
         [JsonProperty("current")]
         public List<Current> Current { get; set; }
@@ -68,9 +65,17 @@ namespace TVPrograms.Models.Chats
         public Date Date { get; set; }
     }
 
+    public class EventsJson
+    {
+        [JsonProperty("form")]
+        public Form Form { get; set; }
+        [JsonProperty("schedule")]
+        public List<Schedule> Schedule { get; set; }
+    }
+
     public class Schedule
     {
         [JsonProperty("event")]
-        public Event Event { get; set; }
+        public EventJson Event { get; set; }
     }
 }

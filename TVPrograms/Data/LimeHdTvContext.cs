@@ -16,8 +16,10 @@ namespace TVPrograms.Data
         {
         }
 
+        public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Channel> Channels { get; set; } = null!;
         public virtual DbSet<Event> Events { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,6 +32,19 @@ namespace TVPrograms.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.ToTable("category", "Tv");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasColumnType("character varying")
+                    .HasColumnName("name");
+            });
+
             modelBuilder.Entity<Channel>(entity =>
             {
                 entity.ToTable("channels", "Tv");
@@ -69,25 +84,59 @@ namespace TVPrograms.Data
 
                 entity.Property(e => e.ChannelId).HasColumnName("channel_id");
 
-                entity.Property(e => e.Date)
+                entity.Property(e => e.EndDate)
                     .HasColumnType("timestamp without time zone")
-                    .HasColumnName("date");
-
-                entity.Property(e => e.EventId).HasColumnName("event_id");
+                    .HasColumnName("end_date");
 
                 entity.Property(e => e.Name)
                     .HasColumnType("character varying")
                     .HasColumnName("name");
 
+                entity.Property(e => e.StartDate)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("start_date");
+
                 entity.Property(e => e.Title)
                     .HasColumnType("character varying")
                     .HasColumnName("title");
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.Events)
+                    .HasForeignKey(d => d.CategoryId)
+                    .HasConstraintName("events_category_id_fkey");
 
                 entity.HasOne(d => d.Channel)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.ChannelId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("events_channel_id_fkey");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users", "auth");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Age).HasColumnName("age");
+
+                entity.Property(e => e.Login)
+                    .HasColumnType("character varying")
+                    .HasColumnName("login");
+
+                entity.Property(e => e.Name)
+                    .HasColumnType("character varying")
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Password)
+                    .HasColumnType("character varying")
+                    .HasColumnName("password");
+
+                entity.Property(e => e.Sex)
+                    .HasColumnType("character varying")
+                    .HasColumnName("sex");
             });
 
             OnModelCreatingPartial(modelBuilder);
