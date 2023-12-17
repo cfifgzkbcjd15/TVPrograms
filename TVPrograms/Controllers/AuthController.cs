@@ -18,7 +18,7 @@ namespace TVPrograms.Controllers
             _repository = repository;
         }
         /// <summary>
-        /// получение авторизационного токена
+        /// получение токена
         /// </summary>
         /// <param name="loginData"></param>
         /// <returns></returns>

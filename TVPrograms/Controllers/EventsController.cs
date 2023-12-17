@@ -6,7 +6,7 @@ using TVPrograms.Models.Events;
 
 namespace TVPrograms.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EventsController : ControllerBase

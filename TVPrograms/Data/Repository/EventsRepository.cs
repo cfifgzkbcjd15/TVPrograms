@@ -21,16 +21,24 @@ namespace TVPrograms.Data.Repository
         {
             using (LimeHdTvContext db = new LimeHdTvContext(options))
             {
-                return await db.Events.Where(x => x.ChannelId == channelId && x.StartDate.Day + days - 1 <= DateTime.Now.Day).Include(x => x.Category).Select(x => new ResponseEvent
+                var currentDate = DateTime.Now;
+                return await db.Events
+                    .Where(x => x.ChannelId == channelId && (x.StartDate.Day - DateTime.Now.Day) <= (days-1) && currentDate < x.EndDate)
+                    .Include(x => x.Category)
+                .OrderBy(x => x.StartDate)
+                .Select(x => new ResponseEvent
                 {
                     Id = x.Id,
                     Description = x.Title,
                     Name = x.Name,
                     ChannelId = channelId,
+                    StartDateMs= ((DateTimeOffset)x.StartDate.AddHours(3)).ToUnixTimeMilliseconds(),
                     StartDate = x.StartDate.ToString("HH:mm"),
-                    EndDate=x.EndDate.ToString("HH:mm"),
+                    EndDate = x.EndDate.ToString("HH:mm"),
                     Category = new ResponseCategory { Name = x.Category.Name, Id = x.Category.Id }
-                }).AsNoTracking().ToListAsync();
+                })
+                .AsNoTracking()
+                .ToListAsync();
             }
         }
 
@@ -38,16 +46,22 @@ namespace TVPrograms.Data.Repository
         {
             using (LimeHdTvContext db = new LimeHdTvContext(options))
             {
-                return await db.Events.Where(x => x.Id == eventId).Include(x => x.Category).Select(x => new ResponseEvent
-                {
-                    Id = x.Id,
-                    Description = x.Title,
-                    Name = x.Name,
-                    ChannelId = x.ChannelId,
-                    StartDate = x.StartDate.ToString("HH:mm"),
-                    EndDate = x.EndDate.ToString("HH:mm"),
-                    Category = new ResponseCategory { Name = x.Category.Name, Id = x.Category.Id }
-                }).AsNoTracking().FirstOrDefaultAsync();
+                return await db.Events
+                    .Where(x => x.Id == eventId)
+                    .Include(x => x.Category)
+                    .OrderBy(x => x.StartDate)
+                    .Select(x => new ResponseEvent
+                    {
+                        Id = x.Id,
+                        Description = x.Title,
+                        Name = x.Name,
+                        ChannelId = x.ChannelId,
+                        StartDateMs= ((DateTimeOffset)x.StartDate.AddHours(3)).ToUnixTimeMilliseconds(),
+                        StartDate = x.StartDate.ToString("HH:mm"),
+                        EndDate = x.EndDate.ToString("HH:mm"),
+                        Category = new ResponseCategory { Name = x.Category.Name, Id = x.Category.Id }
+                    }).AsNoTracking()
+                    .FirstOrDefaultAsync();
             }
         }
 

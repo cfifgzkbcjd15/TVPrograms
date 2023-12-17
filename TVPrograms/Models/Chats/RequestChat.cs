@@ -1,11 +1,13 @@
-﻿namespace TVPrograms.Models.Chats
+﻿using TVPrograms.Models.Users;
+
+namespace TVPrograms.Models.Chats
 {
     public class RequestChat
     {
         public string Prompt { get; set; }
-        public User User { get; set; }
+        public UserChat User { get; set; }
     }
-    public class User
+    public class UserChat
     {
         public short Age { get; set; }
         public string Gender { get; set; }

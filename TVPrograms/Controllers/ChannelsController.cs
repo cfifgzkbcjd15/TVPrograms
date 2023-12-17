@@ -7,11 +7,13 @@ using TVPrograms.Data;
 using TVPrograms.Services;
 using TVPrograms.Models.Channels;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
+using TVPrograms.Models.Events;
 
 namespace TVPrograms.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class ChannelsController : ControllerBase
     {
@@ -31,6 +33,12 @@ namespace TVPrograms.Controllers
         public async Task<List<ResponseChannel>> GetChannels(FilterChannels filters)
         {
             return await _repository.GetChannels(filters);
+        }
+
+        [HttpGet("Test")]
+        public async Task<List<ResponseAiEvent>> Test()
+        {
+            return await _repository.GetAllEvents();
         }
 
         /// <summary>

@@ -9,9 +9,15 @@ namespace TVPrograms.Models.Events
         public int ChannelId { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public long StartDateMs { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ResponseCategory Category { get; set; }
         public double Procent { get; set; }
+    }
+    public class ResponseAiEvent
+    {
+        public Guid Id { get; set; }
+        public string Description { get; set; }
     }
 }
